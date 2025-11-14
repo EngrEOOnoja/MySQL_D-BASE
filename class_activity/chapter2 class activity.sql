@@ -157,3 +157,153 @@ SELECT
 
 -- 2.39 In your answer to Review Question 2.38, was the WHERE clause or the HAVING
 -- clause applied first? Why?
+
+
+select*
+from WAREHOUSE;
+
+-- joining implicitly
+-- this
+select *
+from INVENTORY as i, WAREHOUSE as W
+where i.WarehouseID = W.WarehouseID;
+
+
+select *
+from INVENTORY as i, WAREHOUSE as W
+where i.WarehouseID != W.WarehouseID;
+
+-- this
+select *
+from INVENTORY as i join WAREHOUSE as W
+where i.WarehouseID != W.WarehouseID;
+
+
+-- piority join.
+select *
+from INVENTORY as i Right join WAREHOUSE as W
+ON i.WarehouseID != W.WarehouseID;
+
+
+-- CLASS ACTIVITY TWO.
+-- 2.40 Write an SQL statement to display the SKU, SKU_Description, WarehouseID,
+-- WarehouseCity, and WarehouseState for all items stored in the Atlanta, Bangor, or
+-- Chicago warehouse. Do not use the IN keyword.
+
+	select SKU, SKU_Description, Inventory.WarehouseID, Warehouse.WarehouseID WarehouseCity, WarehouseState
+	FROM Inventory JOIN Warehouse
+    ON Inventory.WarehouseID = Warehouse.WarehouseID
+	WHERE Warehouse.WarehouseCity = 'Atlanta'
+	OR Warehouse.WarehouseCity = 'Bangor'
+	OR Warehouse.WarehouseCity = 'Chicago';
+	
+    
+-- Write an SQL statement to display the SKU, SKU_Description, WarehouseID,
+-- WarehouseCity, and WarehouseState for all items stored in the Atlanta, Bangor, or
+-- Chicago warehouse. Use the IN keyword.
+
+	select SKU, SKU_Description, Inventory.WarehouseID, Warehouse.WarehouseID WarehouseCity, WarehouseState
+	FROM Inventory JOIN Warehouse
+    ON Inventory.WarehouseID = Warehouse.WarehouseID
+	where Warehouse.WarehouseCity IN ('Atlanta', 'Bangor', 'Chicago');
+	
+    
+--     Write an SQL statement to display the SKU, SKU_Description, WarehouseID,
+-- WarehouseCity, and WarehouseState of all items not stored in the Atlanta, Bangor, or
+-- Chicago warehouse. Do not use the NOT IN keyword.
+	select SKU, SKU_Description, Inventory.WarehouseID, Warehouse.WarehouseID WarehouseCity, WarehouseState
+	FROM Inventory JOIN Warehouse
+    ON Inventory.WarehouseID != Warehouse.WarehouseID
+	WHERE Warehouse.WarehouseCity = 'Atlanta'
+	OR Warehouse.WarehouseCity = 'Bangor'
+	OR Warehouse.WarehouseCity = 'Chicago';
+
+
+-- Write an SQL statement to display the SKU, SKU_Description, WarehouseID,
+-- WarehouseCity, and WarehouseState of all items not stored in the Atlanta, Bangor, or
+-- Chicago warehouse. Use the NOT IN keyword.
+	select SKU, SKU_Description, Inventory.WarehouseID, Warehouse.WarehouseID WarehouseCity, WarehouseState
+	FROM Inventory JOIN Warehouse
+    ON Inventory.WarehouseID != Warehouse.WarehouseID
+	where Warehouse.WarehouseCity IN ('Atlanta', 'Bangor', 'Chicago');
+
+
+-- Write an SQL statement to produce a single column called ItemLocation that 
+-- combines the SKU_Description, the phrase “is located in,” and WarehouseCity. Do not be
+-- concerned with removing leading or trailing blanks.
+
+
+SELECT SKU_Description + ' is located in ' + WarehouseCity AS ItemLocation
+FROM Inventory JOIN Warehouse 
+ON Inventory.WarehouseID = Warehouse.WarehouseID;
+
+-- Write an SQL statement to show the SKU, SKU_Description, and WarehouseID for
+-- all items stored in a warehouse managed by ‘Lucille Smith’. Use a subquery.
+
+SELECT SKU, SKU_Description, WarehouseID
+FROM Inventory WHERE WarehouseID IN (
+        SELECT WarehouseID
+        FROM Warehouse
+        WHERE Manager = 'Lucille Smith'
+);
+
+-- Write an SQL statement to show the SKU, SKU_Description, and WarehouseID for
+-- all items stored in a warehouse managed by ‘Lucille Smith’. Use a join using JOIN ON
+-- syntax.
+
+SELECT Inventory.SKU, Inventory.SKU_Description, Inventory.WarehouseID
+FROM Inventory JOIN Warehouse
+ON Inventory.WarehouseID = Warehouse.WarehouseID
+WHERE Warehouse.Manager = 'Lucille Smith';
+
+
+
+-- Write an SQL statement to show the WarehouseID and average QuantityOnHand of
+-- all items stored in a warehouse managed by ‘Lucille Smith’. Use a subquery.
+
+SELECT WarehouseID, AVG(QuantityOnHand) AS AvgQuantityOnHand
+FROM Inventory WHERE WarehouseID IN (
+        SELECT WarehouseID
+        FROM Warehouse
+        WHERE Manager = 'Lucille Smith'
+)
+GROUP BY WarehouseID;
+
+
+-- Write an SQL statement to show the WarehouseID and average QuantityOnHand of
+-- all items stored in a warehouse managed by ‘Lucille Smith’. Use a join, but do not use
+-- JOIN ON syntax.
+
+SELECT Inventory.WarehouseID, AVG(Inventory.QuantityOnHand) AS AvgQuantityOnHand
+FROM Inventory, Warehouse
+WHERE Inventory.WarehouseID = Warehouse.WarehouseID
+AND Warehouse.Manager = 'Lucille Smith'
+GROUP BY Inventory.WarehouseID;
+
+
+-- Write an SQL statement to show the WarehouseID and average QuantityOnHand of
+-- all items stored in a warehouse managed by ‘Lucille Smith’. Use a join using JOIN ON
+-- syntax.
+SELECT Inventory.WarehouseID, AVG(Inventory.QuantityOnHand) AS AvgQuantityOnHand
+FROM Inventory JOIN Warehouse
+ON Inventory.WarehouseID = Warehouse.WarehouseID
+WHERE Warehouse.Manager = 'Lucille Smith'
+GROUP BY Inventory.WarehouseID;
+
+
+
+SELECT 
+    Warehouse.WarehouseID,
+    Warehouse.WarehouseCity,
+    Warehouse.WarehouseState,
+    Warehouse.Manager,
+    Inventory.SKU,
+    Inventory.SKU_Description,
+    Inventory.QuantityOnHand
+FROM Inventory
+JOIN Warehouse
+    ON Inventory.WarehouseID = Warehouse.WarehouseID
+WHERE Warehouse.Manager = 'Lucille Smith';
+
+
+
